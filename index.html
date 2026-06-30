@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=1.0">
   <title>F.C.E.T. EDITOR · Professional IDE</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
@@ -15,6 +15,7 @@
       font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
       background: #0b0f17;
       height: 100vh;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -24,13 +25,14 @@
     .file-input-bar {
       background: #131a27;
       border-bottom: 1px solid #21262d;
-      padding: 0.45rem 1rem;
+      padding: 0.45rem 0.6rem;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.4rem;
       flex-shrink: 0;
       z-index: 24;
       position: relative;
+      flex-wrap: wrap;
     }
     .explorer-toggle-btn {
       background: #1c2436;
@@ -46,6 +48,7 @@
       justify-content: center;
       transition: 0.2s;
       flex-shrink: 0;
+      min-width: 2.2rem;
     }
     .explorer-toggle-btn:hover {
       background: #2e3a50;
@@ -56,19 +59,21 @@
       background: #0f1520;
       border: 1px solid #2c3548;
       border-radius: 0.5rem;
-      padding: 0.45rem 1rem;
+      padding: 0.45rem 0.8rem;
       color: #e1e8ff;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       display: flex;
       align-items: center;
       gap: 0.4rem;
       overflow: hidden;
       white-space: nowrap;
+      min-width: 80px;
     }
     .file-path-display .file-icon-sm {
       color: #4a6cf7;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
+      flex-shrink: 0;
     }
     .file-path-display .path-text {
       overflow: hidden;
@@ -88,6 +93,7 @@
       justify-content: center;
       transition: 0.2s;
       flex-shrink: 0;
+      min-width: 2.2rem;
     }
     .search-icon-btn:hover {
       background: #2e3a50;
@@ -112,6 +118,7 @@
       justify-content: center;
       transition: 0.2s;
       flex-shrink: 0;
+      min-width: 2.2rem;
     }
     .run-icon-btn:hover {
       background: #3c4fae;
@@ -132,6 +139,7 @@
       transition: 0.2s;
       flex-shrink: 0;
       position: relative;
+      min-width: 2.2rem;
     }
     .dropdown-icon-btn:hover {
       background: #2e3a50;
@@ -148,7 +156,7 @@
       flex-direction: column;
       gap: 0.1rem;
       z-index: 30;
-      min-width: 130px;
+      min-width: 140px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.7);
     }
     .mini-dropdown.show {
@@ -158,13 +166,13 @@
       background: transparent;
       border: none;
       color: #d3d9e6;
-      padding: 0.4rem 0.8rem;
+      padding: 0.5rem 0.8rem;
       border-radius: 0.5rem;
       cursor: pointer;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.5rem;
     }
     .mini-item:hover {
       background: #2e3a50;
@@ -210,6 +218,7 @@
       overflow: hidden;
       position: relative;
       background: #0c101a;
+      min-height: 0;
     }
 
     .explorer-overlay {
@@ -218,6 +227,7 @@
       left: 0;
       bottom: 0;
       width: 300px;
+      max-width: 85vw;
       background: #111827;
       border-right: 1px solid #2c3548;
       z-index: 40;
@@ -244,24 +254,24 @@
       pointer-events: auto;
     }
     .explorer-header {
-      padding: 1rem;
+      padding: 0.8rem;
       background: #1a1f30;
       border-bottom: 1px solid #2c3548;
       flex-shrink: 0;
     }
     .explorer-title {
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: #4a6cf7;
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.6rem;
       display: flex;
       align-items: center;
       gap: 0.4rem;
     }
     .explorer-title i {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
     .explorer-actions-row {
       display: flex;
@@ -270,7 +280,7 @@
     }
     .explorer-label {
       color: #8899cc;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -280,11 +290,11 @@
       background: #1c2436;
       border: 1px solid #323b51;
       color: #d3d9e6;
-      width: 2rem;
-      height: 2rem;
+      width: 1.8rem;
+      height: 1.8rem;
       border-radius: 0.4rem;
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -318,13 +328,13 @@
       background: transparent;
       border: none;
       color: #d3d9e6;
-      padding: 0.4rem 0.8rem;
+      padding: 0.5rem 0.8rem;
       border-radius: 0.5rem;
       cursor: pointer;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.5rem;
     }
     .explorer-more-item:hover {
       background: #2e3a50;
@@ -337,6 +347,7 @@
       font-size: 0.82rem;
       display: flex;
       flex-direction: column;
+      -webkit-overflow-scrolling: touch;
     }
     .explorer-tree::-webkit-scrollbar {
       width: 4px;
@@ -362,12 +373,13 @@
       display: flex;
       align-items: center;
       gap: 0.4rem;
-      padding: 0.35rem 0.5rem;
+      padding: 0.4rem 0.5rem;
       border-radius: 0.4rem;
       cursor: pointer;
       transition: 0.12s;
       white-space: nowrap;
       position: relative;
+      font-size: 0.8rem;
     }
     .tree-item:hover {
       background: #1e2a40;
@@ -417,11 +429,13 @@
       margin-left: auto;
       opacity: 1;
       cursor: pointer;
-      padding: 0.15rem 0.3rem;
+      padding: 0.2rem 0.3rem;
       border-radius: 0.3rem;
       color: #8899cc;
       font-size: 0.7rem;
       position: relative;
+      min-width: 1.5rem;
+      text-align: center;
     }
     .tree-item .three-dot:hover {
       background: #3b435a;
@@ -438,8 +452,10 @@
       display: none;
       flex-direction: column;
       gap: 0.1rem;
-      min-width: 150px;
+      min-width: 155px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      max-height: 70vh;
+      overflow-y: auto;
     }
     .context-menu.show {
       display: flex;
@@ -448,16 +464,17 @@
       background: transparent;
       border: none;
       color: #d3d9e6;
-      padding: 0.4rem 0.7rem;
+      padding: 0.5rem 0.7rem;
       border-radius: 0.4rem;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      font-size: 0.78rem;
+      gap: 0.5rem;
+      font-size: 0.8rem;
       transition: 0.15s;
       flex-direction: row;
       text-align: left;
+      min-height: 2.3rem;
     }
     .context-item i {
       order: -1;
@@ -479,25 +496,28 @@
       display: flex;
       flex-direction: column;
       background: #151d2b;
-      margin: 0.4rem;
+      margin: 0.3rem;
       border-radius: 0.8rem;
       border: 1px solid #2c3444;
       overflow: hidden;
+      min-height: 0;
     }
     .editor-header {
-      padding: 0.35rem 1rem;
+      padding: 0.3rem 0.8rem;
       background: rgba(20,27,40,0.8);
       border-bottom: 1px solid #2f3a52;
       font-weight: 600;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       color: #bdc8e0;
+      flex-shrink: 0;
     }
     .editor-wrap {
       flex: 1;
       display: flex;
+      min-height: 0;
     }
     textarea {
       width: 100%;
@@ -505,53 +525,80 @@
       background: #0f1520;
       border: none;
       resize: none;
-      padding: 1rem;
+      padding: 0.8rem;
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
-      font-size: 0.9rem;
-      line-height: 1.6;
+      font-size: 0.85rem;
+      line-height: 1.5;
       color: #e1e8ff;
       caret-color: #5b7bff;
       outline: none;
       white-space: pre-wrap;
       word-break: break-word;
       overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    textarea:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
     textarea::placeholder {
       color: #4a5570;
     }
 
-    .bottom-toolbar {
+    .bottom-toolbar-wrap {
+      position: relative;
+      flex-shrink: 0;
       background: #131a27;
       border-top: 1px solid #21262d;
-      padding: 0.35rem 1rem;
+    }
+    .bottom-toolbar {
       display: flex;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.25rem;
+      padding: 0.4rem 0.5rem;
       overflow-x: auto;
-      flex-shrink: 0;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scroll-behavior: smooth;
+    }
+    .bottom-toolbar::-webkit-scrollbar {
+      display: none;
     }
     .tool-btn {
       background: #1c2436;
       border: 1px solid #323b51;
       color: #d3d9e6;
-      width: 2rem;
-      height: 2rem;
-      border-radius: 50%;
+      width: 2.3rem;
+      height: 2.3rem;
+      border-radius: 0.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       flex-shrink: 0;
+      min-width: 2.3rem;
+      transition: 0.15s;
+    }
+    .tool-btn:active {
+      background: #2e3a50;
+      border-color: #5f76d0;
+      color: white;
     }
     .tool-btn:hover {
       background: #2e3a50;
       border-color: #5f76d0;
       color: white;
     }
+    .tool-btn.highlight {
+      background: #2d3f8c;
+      border-color: #4b6cf7;
+      color: white;
+    }
     .tool-divider {
       width: 1px;
-      height: 1.3rem;
+      height: 1.4rem;
       background: #323b51;
       margin: 0 0.15rem;
       flex-shrink: 0;
@@ -612,6 +659,7 @@
       flex: 1;
       overflow: auto;
       background: #f8f9fc;
+      -webkit-overflow-scrolling: touch;
     }
     iframe {
       width: 100%;
@@ -630,6 +678,7 @@
       opacity: 0;
       pointer-events: none;
       transition: 0.2s;
+      padding: 1rem;
     }
     .modal-overlay.active {
       opacity: 1;
@@ -640,7 +689,8 @@
       border: 1px solid #4a6cf7;
       border-radius: 1rem;
       padding: 1.2rem;
-      width: 300px;
+      width: 100%;
+      max-width: 320px;
       display: flex;
       flex-direction: column;
       gap: 0.7rem;
@@ -649,18 +699,54 @@
       background: #0f1520;
       border: 1px solid #38415a;
       color: white;
-      padding: 0.5rem 0.8rem;
+      padding: 0.6rem 0.8rem;
       border-radius: 1.5rem;
       outline: none;
+      font-size: 0.9rem;
+    }
+    .modal-box input:focus {
+      border-color: #4a6cf7;
     }
     .modal-box button {
       background: #4a6cf7;
       border: none;
       color: white;
-      padding: 0.5rem;
+      padding: 0.6rem;
       border-radius: 1.5rem;
       cursor: pointer;
       font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .modal-box button:hover {
+      background: #5b7dff;
+    }
+
+    @media (max-width: 480px) {
+      .file-input-bar {
+        padding: 0.35rem 0.4rem;
+        gap: 0.3rem;
+      }
+      .file-path-display {
+        font-size: 0.7rem;
+        padding: 0.35rem 0.5rem;
+      }
+      .editor-panel {
+        margin: 0.2rem;
+      }
+      textarea {
+        padding: 0.6rem;
+        font-size: 0.8rem;
+      }
+      .tool-btn {
+        width: 2.1rem;
+        height: 2.1rem;
+        min-width: 2.1rem;
+        font-size: 0.8rem;
+      }
+      .explorer-overlay {
+        width: 280px;
+        max-width: 90vw;
+      }
     }
   </style>
 </head>
@@ -720,20 +806,28 @@
         <span style="font-size:0.65rem;opacity:0.6;">Ctrl+Enter to run</span>
       </div>
       <div class="editor-wrap">
-        <textarea id="codeEditor" placeholder="Create or select a file to start coding..." spellcheck="false"></textarea>
+        <textarea id="codeEditor" placeholder="Create or select a file to start coding..." spellcheck="false" disabled></textarea>
       </div>
-      <div class="bottom-toolbar">
-        <button class="tool-btn" id="arrowUpBtn"><i class="fas fa-arrow-up"></i></button>
-        <button class="tool-btn" id="arrowDownBtn"><i class="fas fa-arrow-down"></i></button>
-        <button class="tool-btn" id="arrowLeftBtn"><i class="fas fa-arrow-left"></i></button>
-        <button class="tool-btn" id="arrowRightBtn"><i class="fas fa-arrow-right"></i></button>
-        <span class="tool-divider"></span>
-        <button class="tool-btn" id="undoBtn"><i class="fas fa-undo"></i></button>
-        <button class="tool-btn" id="redoBtn"><i class="fas fa-redo"></i></button>
-        <span class="tool-divider"></span>
-        <button class="tool-btn" id="copySelectionBtn"><i class="fas fa-copy"></i></button>
-        <button class="tool-btn" id="cutBtn"><i class="fas fa-cut"></i></button>
-        <button class="tool-btn" id="pasteBtn"><i class="fas fa-paste"></i></button>
+      <div class="bottom-toolbar-wrap">
+        <div class="bottom-toolbar" id="bottomToolbar">
+          <button class="tool-btn" id="tabBtn" title="Tab"><i class="fas fa-arrow-right-to-bracket"></i></button>
+          <span class="tool-divider"></span>
+          <button class="tool-btn" id="arrowUpBtn" title="Up"><i class="fas fa-arrow-up"></i></button>
+          <button class="tool-btn" id="arrowDownBtn" title="Down"><i class="fas fa-arrow-down"></i></button>
+          <button class="tool-btn" id="arrowLeftBtn" title="Left"><i class="fas fa-arrow-left"></i></button>
+          <button class="tool-btn" id="arrowRightBtn" title="Right"><i class="fas fa-arrow-right"></i></button>
+          <span class="tool-divider"></span>
+          <button class="tool-btn" id="undoBtn" title="Undo"><i class="fas fa-undo"></i></button>
+          <button class="tool-btn" id="redoBtn" title="Redo"><i class="fas fa-redo"></i></button>
+          <span class="tool-divider"></span>
+          <button class="tool-btn" id="copySelectionBtn" title="Copy"><i class="fas fa-copy"></i></button>
+          <button class="tool-btn" id="cutBtn" title="Cut"><i class="fas fa-cut"></i></button>
+          <button class="tool-btn" id="pasteBtn" title="Paste"><i class="fas fa-paste"></i></button>
+          <span class="tool-divider"></span>
+          <button class="tool-btn highlight" id="saveBtn" title="Save"><i class="fas fa-save"></i></button>
+          <button class="tool-btn" id="saveAsBtn" title="Save As"><i class="fas fa-file-export"></i></button>
+          <button class="tool-btn" id="aiBtn" title="AI"><i class="fas fa-robot"></i></button>
+        </div>
       </div>
     </div>
   </div>
@@ -749,7 +843,7 @@
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-box">
       <label style="color:#cdd6f0;font-weight:600;" id="modalLabel">New File</label>
-      <input type="text" id="modalInput" placeholder="filename.html">
+      <input type="text" id="modalInput" placeholder="filename.html" autocomplete="off">
       <div style="display:flex;gap:0.4rem;">
         <button id="modalConfirm">Create</button>
         <button style="background:#3b435a;" id="modalCancel">Cancel</button>
@@ -779,7 +873,7 @@
       const explorerMoreBtn = document.getElementById('explorerMoreBtn');
       const explorerMoreDropdown = document.getElementById('explorerMoreDropdown');
 
-      const STORAGE_KEY = 'fcet_fs_v6';
+      const STORAGE_KEY = 'fcet_fs_v9';
       let fileSystem = { root: { type: 'folder', children: {} } };
       let currentFilePath = null;
       let selectedTreePath = null;
@@ -863,6 +957,16 @@
         if (!name) return 'default';
         const ext = name.split('.').pop().toLowerCase();
         return { html:'html', css:'css', js:'js', py:'python', md:'markdown', json:'json' }[ext] || 'default';
+      }
+
+      function updateEditorState() {
+        if (currentFilePath) {
+          editor.disabled = false;
+          editor.placeholder = 'Start typing...';
+        } else {
+          editor.disabled = true;
+          editor.placeholder = 'Create or select a file to start coding...';
+        }
       }
 
       function openExplorer() {
@@ -973,6 +1077,7 @@
         currentFilePath = path;
         editor.value = node.content || '';
         pathText.textContent = path;
+        updateEditorState();
         saveFS();
         renderTree(searchInput.value);
         editor.focus();
@@ -990,7 +1095,7 @@
           setTimeout(function() {
             modalInput.focus(); 
             modalInput.select();
-          }, 100);
+          }, 150);
         } else {
           alert('Cannot create item here. Select a folder first.');
         }
@@ -1004,12 +1109,13 @@
         var name = modalInput.value.trim();
         if (!name) {
           alert('Please enter a name');
+          modalInput.focus();
           return;
         }
         
         var parent = getNode(modalParentPath);
         if (!parent) {
-          alert('Parent folder not found: ' + modalParentPath);
+          alert('Parent folder not found');
           return;
         }
         
@@ -1022,6 +1128,8 @@
         
         if (parent.children[name]) {
           alert('Name already exists');
+          modalInput.focus();
+          modalInput.select();
           return;
         }
         
@@ -1049,6 +1157,7 @@
 
       modalInput.onkeydown = function(e) {
         if (e.key === 'Enter') {
+          e.preventDefault();
           createItem();
         } else if (e.key === 'Escape') {
           hideModal();
@@ -1068,6 +1177,7 @@
           currentFilePath = null; 
           editor.value = ''; 
           pathText.textContent = 'No file open'; 
+          updateEditorState();
         }
         saveFS(); 
         renderTree(searchInput.value);
@@ -1121,19 +1231,28 @@
         var sourceNode = getNode(clipboardPath);
         if (!sourceNode) {
           alert('Source item not found');
+          clipboardPath = null;
+          clipboardAction = null;
           return;
         }
         var targetNode = getNode(targetPath);
         if (!targetNode || targetNode.type !== 'folder') {
-          alert('Cannot paste here');
+          alert('Cannot paste here. Select a folder.');
           return;
         }
         ensureChildren(targetNode);
         var name = getFileName(clipboardPath);
         var newName = name;
+        var counter = 1;
         while (targetNode.children[newName]) {
-          var pts = newName.split('.');
-          newName = pts[0] + ' (copy).' + (pts[1] || '');
+          var pts = name.split('.');
+          if (pts.length > 1) {
+            var ext = pts.pop();
+            newName = pts.join('.') + ' (copy ' + counter + ').' + ext;
+          } else {
+            newName = name + ' (copy ' + counter + ')';
+          }
+          counter++;
         }
         targetNode.children[newName] = JSON.parse(JSON.stringify(sourceNode));
         
@@ -1141,7 +1260,13 @@
           var pp = getParentPath(clipboardPath);
           var parent = getNode(pp);
           if (parent && parent.children) {
-            delete parent.children[name];
+            delete parent.children[getFileName(clipboardPath)];
+          }
+          if (currentFilePath === clipboardPath) {
+            currentFilePath = null;
+            editor.value = '';
+            pathText.textContent = 'No file open';
+            updateEditorState();
           }
           clipboardPath = null;
           clipboardAction = null;
@@ -1162,7 +1287,10 @@
             files: [file]
           }).catch(function() {});
         } else {
-          alert('Sharing not supported on this browser');
+          var content = node.content || '';
+          navigator.clipboard.writeText(content).then(function() {
+            alert('Content copied to clipboard for sharing!');
+          });
         }
       }
 
@@ -1178,10 +1306,6 @@
         a.click(); 
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-      }
-
-      function exportFile(path) {
-        downloadFileAction(path);
       }
 
       function buildContextMenu(path, type) {
@@ -1230,6 +1354,13 @@
 
       function showContextMenu(x, y) {
         contextMenu.innerHTML = buildContextMenu(contextTargetPath, contextTargetType);
+        var vw = window.innerWidth;
+        var vh = window.innerHeight;
+        var menuWidth = 170;
+        if (x < 5) x = 5;
+        if (x + menuWidth > vw) x = vw - menuWidth - 5;
+        if (y + 350 > vh) y = vh - 360;
+        if (y < 5) y = 5;
         contextMenu.style.left = x + 'px';
         contextMenu.style.top = y + 'px';
         contextMenu.classList.add('show');
@@ -1257,7 +1388,7 @@
           case 'importFile': importFileTo(targetForCreate); break;
           case 'rename': renameItem(contextTargetPath); break;
           case 'copyPath': copyPathAction(contextTargetPath); break;
-          case 'exportFile': exportFile(contextTargetPath); break;
+          case 'exportFile': downloadFileAction(contextTargetPath); break;
           case 'delete': deleteItem(contextTargetPath); break;
           case 'copy': copyItem(contextTargetPath); break;
           case 'cut': cutItem(contextTargetPath); break;
@@ -1275,6 +1406,39 @@
 
       async function importFileTo(parentPath) {
         try {
+          if (!window.showOpenFilePicker) {
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.html,.css,.js,.py,.md,.txt,.json,.xml';
+            input.onchange = async function() {
+              var file = input.files[0];
+              if (!file) return;
+              var content = await file.text();
+              var parent = getNode(parentPath);
+              if (parent && parent.type === 'folder') {
+                ensureChildren(parent);
+                var name = file.name;
+                var counter = 1;
+                while (parent.children[name]) {
+                  var pts = name.split('.');
+                  if (pts.length > 1) {
+                    var ext = pts.pop();
+                    name = pts.join('.') + ' (copy ' + counter + ').' + ext;
+                  } else {
+                    name = name + ' (copy ' + counter + ')';
+                  }
+                  counter++;
+                }
+                parent.children[name] = { type: 'file', content: content };
+                saveFS(); 
+                renderTree(searchInput.value); 
+                var newPath = parentPath === 'root' ? name : parentPath + '/' + name;
+                openFile(newPath);
+              }
+            };
+            input.click();
+            return;
+          }
           var [h] = await window.showOpenFilePicker({ 
             types: [{ 
               accept: { 'text/*': ['.html','.css','.js','.py','.md','.txt','.json','.xml'] } 
@@ -1286,9 +1450,16 @@
           if (parent && parent.type === 'folder') {
             ensureChildren(parent);
             var name = file.name;
-            while (parent.children[name]) { 
-              var pts = name.split('.'); 
-              name = pts[0] + ' (copy).' + (pts[1] || 'txt'); 
+            var counter = 1;
+            while (parent.children[name]) {
+              var pts = name.split('.');
+              if (pts.length > 1) {
+                var ext = pts.pop();
+                name = pts.join('.') + ' (copy ' + counter + ').' + ext;
+              } else {
+                name = name + ' (copy ' + counter + ')';
+              }
+              counter++;
             }
             parent.children[name] = { type: 'file', content: content };
             saveFS(); 
@@ -1297,7 +1468,7 @@
             openFile(newPath);
           }
         } catch(e) { 
-          if (e.name !== 'AbortError') alert('Import failed: ' + e.message); 
+          if (e.name !== 'AbortError') console.log('Import cancelled');
         }
       }
 
@@ -1307,8 +1478,10 @@
           if (n && n.type === 'file') { 
             n.content = editor.value; 
             saveFS(); 
+            return true;
           } 
         }
+        return false;
       }
       
       function downloadFile(name, content) {
@@ -1319,8 +1492,10 @@
         a.download = name; 
         document.body.appendChild(a); 
         a.click(); 
-        document.body.removeChild(a);
-        URL.revokeObjectURL(u);
+        setTimeout(function() {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(u);
+        }, 100);
       }
       
       function downloadAll() {
@@ -1338,6 +1513,10 @@
           return files;
         }
         var allFiles = collect(fileSystem.root);
+        if (allFiles.length === 0) {
+          alert('No files to download');
+          return;
+        }
         allFiles.forEach(function(f) { 
           downloadFile(f.name, f.content); 
         });
@@ -1352,15 +1531,15 @@
       
       function genPreview(code, lang) {
         if (lang === 'html' || lang === 'css' || lang === 'js') {
-          return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' + (lang === 'css' ? code : '') + '</style></head><body>' + (lang === 'html' ? code : '') + '<script>' + (lang === 'js' ? code : '') + '<\/script></body></html>';
+          return '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><style>' + (lang === 'css' ? code : '') + '</style></head><body>' + (lang === 'html' ? code : '') + '<script>' + (lang === 'js' ? code : '') + '<\/script></body></html>';
         } else if (lang === 'markdown') {
           var h = code.replace(/```(\w*)\n([\s\S]*?)```/g,'<pre><code>$2</code></pre>');
           h = h.replace(/`([^`]+)`/g,'<code>$1</code>');
           h = h.replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^# (.+)$/gm,'<h1>$1</h1>');
           h = h.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>');
-          return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;padding:2rem;background:#fff}</style></head><body>' + h.replace(/\n/g,'<br>') + '</body></html>';
+          return '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><style>body{font-family:system-ui;padding:1.5rem;background:#fff;max-width:800px;margin:0 auto}</style></head><body>' + h.replace(/\n/g,'<br>') + '</body></html>';
         }
-        return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{white-space:pre-wrap;font-family:monospace;padding:2rem;background:#fff}</style></head><body>' + esc(code) + '</body></html>';
+        return '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><style>body{white-space:pre-wrap;font-family:monospace;padding:1.5rem;background:#fff}</style></head><body>' + esc(code) + '</body></html>';
       }
       
       function writeFrame(html) {
@@ -1397,13 +1576,17 @@
           await window.pyodide.runPythonAsync('import sys\nfrom io import StringIO\nsys.stdout = StringIO()');
           await window.pyodide.runPythonAsync(code);
           var out = await window.pyodide.runPythonAsync('sys.stdout.getvalue()');
-          writeFrame('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:monospace;padding:2rem;background:#f8f9ff}</style></head><body>' + esc(out || '✅ Done.') + '</body></html>');
+          writeFrame('<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><style>body{font-family:monospace;padding:1.5rem;background:#f8f9ff}</style></head><body>' + esc(out || '✅ Done.') + '</body></html>');
         } catch(e) {
-          writeFrame('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:monospace;padding:2rem;color:red}</style></head><body>❌ ' + esc(e.message || e) + '</body></html>');
+          writeFrame('<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><style>body{font-family:monospace;padding:1.5rem;color:red}</style></head><body>❌ ' + esc(e.message || e) + '</body></html>');
         }
       }
       
       function executeRun() {
+        if (!currentFilePath) {
+          alert('Please create or open a file first');
+          return;
+        }
         saveCurrent();
         var lang = getLang(currentFilePath);
         outputOverlay.classList.add('active');
@@ -1499,7 +1682,14 @@
         if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { 
           e.preventDefault(); 
           executeRun(); 
-        } 
+        }
+        if (e.key === 'Tab') {
+          e.preventDefault();
+          var start = editor.selectionStart;
+          var end = editor.selectionEnd;
+          editor.setRangeText('  ', start, end, 'end');
+          editor.focus();
+        }
       });
 
       document.getElementById('moreOptionsBtn').onclick = function(e) { 
@@ -1507,8 +1697,10 @@
         miniDropdown.classList.toggle('show'); 
       };
       
-      document.addEventListener('click', function() { 
-        miniDropdown.classList.remove('show'); 
+      document.addEventListener('click', function(e) { 
+        if (!document.getElementById('moreOptionsBtn').contains(e.target)) {
+          miniDropdown.classList.remove('show'); 
+        }
       });
       
       miniDropdown.onclick = function(e) {
@@ -1516,8 +1708,16 @@
         if (!actionItem) return;
         var action = actionItem.getAttribute('data-action');
         if (action === 'save') {
+          if (!currentFilePath) {
+            alert('No file open. Create a file first.');
+            return;
+          }
           saveCurrent();
-          if (currentFilePath) downloadFile(getFileName(currentFilePath), editor.value);
+          downloadFile(getFileName(currentFilePath), editor.value);
+          var saveBtn = document.getElementById('saveBtn');
+          var orig = saveBtn.innerHTML;
+          saveBtn.innerHTML = '<i class="fas fa-check"></i>';
+          setTimeout(function() { saveBtn.innerHTML = orig; }, 800);
         } else if (action === 'saveAs') { 
           saveCurrent(); 
           var n = currentFilePath ? getFileName(currentFilePath) : 'file.txt'; 
@@ -1530,19 +1730,24 @@
         } else if (action === 'downloadAll') {
           downloadAll();
         } else if (action === 'clearEditor') { 
-          editor.value = ''; 
-          if (currentFilePath) { 
+          if (!currentFilePath) {
+            alert('No file open.');
+            return;
+          }
+          if (confirm('Clear all content?')) {
+            editor.value = ''; 
             var node = getNode(currentFilePath); 
             if (node && node.type === 'file') {
               node.content = ''; 
               saveFS(); 
             }
-          } 
+          }
         }
         miniDropdown.classList.remove('show');
       };
 
       function moveCursor(dx, dy) {
+        if (!currentFilePath) return;
         var t = editor, p = t.selectionStart, txt = t.value, lines = txt.split('\n');
         var cc = 0, cl = 0, col = 0;
         for (var i = 0; i < lines.length; i++) { 
@@ -1568,31 +1773,76 @@
         t.focus();
       }
       
-      document.getElementById('arrowUpBtn').onclick = function() { moveCursor(0, -1); };
-      document.getElementById('arrowDownBtn').onclick = function() { moveCursor(0, 1); };
-      document.getElementById('arrowLeftBtn').onclick = function() { moveCursor(-1, 0); };
-      document.getElementById('arrowRightBtn').onclick = function() { moveCursor(1, 0); };
-      document.getElementById('undoBtn').onclick = function() { document.execCommand('undo'); editor.focus(); };
-      document.getElementById('redoBtn').onclick = function() { document.execCommand('redo'); editor.focus(); };
+      function requireFile(action) {
+        if (!currentFilePath) {
+          alert('Please create or open a file first.');
+          return false;
+        }
+        return true;
+      }
+
+      document.getElementById('tabBtn').onclick = function() {
+        if (!requireFile()) return;
+        var start = editor.selectionStart;
+        var end = editor.selectionEnd;
+        editor.setRangeText('  ', start, end, 'end');
+        editor.focus();
+      };
+      document.getElementById('arrowUpBtn').onclick = function() { if (requireFile()) moveCursor(0, -1); };
+      document.getElementById('arrowDownBtn').onclick = function() { if (requireFile()) moveCursor(0, 1); };
+      document.getElementById('arrowLeftBtn').onclick = function() { if (requireFile()) moveCursor(-1, 0); };
+      document.getElementById('arrowRightBtn').onclick = function() { if (requireFile()) moveCursor(1, 0); };
+      document.getElementById('undoBtn').onclick = function() { if (requireFile()) { document.execCommand('undo'); editor.focus(); } };
+      document.getElementById('redoBtn').onclick = function() { if (requireFile()) { document.execCommand('redo'); editor.focus(); } };
       document.getElementById('copySelectionBtn').onclick = function() { 
+        if (!requireFile()) return;
         if (editor.selectionStart !== editor.selectionEnd) {
           document.execCommand('copy'); 
         } else {
-          navigator.clipboard.writeText(editor.value); 
+          navigator.clipboard.writeText(editor.value).then(function() {
+            alert('All text copied!');
+          });
         }
         editor.focus(); 
       };
-      document.getElementById('cutBtn').onclick = function() { document.execCommand('cut'); editor.focus(); };
-      document.getElementById('pasteBtn').onclick = async function() { 
-        try { 
-          var t = await navigator.clipboard.readText(); 
-          editor.setRangeText(t, editor.selectionStart, editor.selectionEnd, 'end'); 
-        } catch(e) { 
+      document.getElementById('cutBtn').onclick = function() { if (requireFile()) { document.execCommand('cut'); editor.focus(); } };
+      document.getElementById('pasteBtn').onclick = function() {
+        if (!requireFile()) return;
+        navigator.clipboard.readText().then(function(t) { 
+          editor.setRangeText(t, editor.selectionStart, editor.selectionEnd, 'end');
+          editor.focus();
+        }).catch(function() { 
           document.execCommand('paste'); 
-        } 
-        editor.focus(); 
+          editor.focus();
+        });
+      };
+      document.getElementById('saveBtn').onclick = function() {
+        if (!currentFilePath) {
+          alert('No file open. Create a file first.');
+          return;
+        }
+        saveCurrent();
+        downloadFile(getFileName(currentFilePath), editor.value);
+        var btn = document.getElementById('saveBtn');
+        var orig = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i>';
+        setTimeout(function() { btn.innerHTML = orig; }, 800);
+      };
+      document.getElementById('saveAsBtn').onclick = function() {
+        saveCurrent();
+        var n = currentFilePath ? getFileName(currentFilePath) : 'file.txt';
+        var nn = prompt('Save as:', n);
+        if (nn) downloadFile(nn, editor.value);
+      };
+      document.getElementById('aiBtn').onclick = function() {
+        if (!currentFilePath) {
+          alert('Open a file to use AI features.');
+          return;
+        }
+        alert('AI Assistant: Ready to help with your code!');
       };
 
+      updateEditorState();
       loadFS();
       renderTree();
       editor.value = '';
