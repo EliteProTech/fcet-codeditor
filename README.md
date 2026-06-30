@@ -100,14 +100,9 @@ Open **index.html** in your browser or run a local web server.
 ---
 
 # 🌐 Live Demo
+## WEBSITE 
 
-### ▲ Vercel
-
-https://fect-code-editor.vercel.app
-
-### 🚀 Render
-
-https://fect-code-editor.onrender.com
+[https://fect-code-editor.vercel.app](https://eliteprotech.my.id/fcet-codeditor)
 
 ---
 
