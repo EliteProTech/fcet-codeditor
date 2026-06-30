@@ -244,20 +244,37 @@
       pointer-events: auto;
     }
     .explorer-header {
-      padding: 0.8rem 1rem;
+      padding: 1rem;
       background: #1a1f30;
       border-bottom: 1px solid #2c3548;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: #bdc8e0;
       flex-shrink: 0;
     }
-    .explorer-header .actions {
+    .explorer-title {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #4a6cf7;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.8rem;
       display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .explorer-title i {
+      font-size: 0.9rem;
+    }
+    .explorer-actions-row {
+      display: flex;
+      align-items: center;
       gap: 0.3rem;
+    }
+    .explorer-label {
+      color: #8899cc;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-right: auto;
     }
     .explorer-header .icon-btn {
       background: #1c2436;
@@ -272,10 +289,45 @@
       align-items: center;
       justify-content: center;
       transition: 0.2s;
+      position: relative;
     }
     .explorer-header .icon-btn:hover {
       background: #2e3a50;
       border-color: #5f76d0;
+      color: white;
+    }
+    .explorer-more-dropdown {
+      position: absolute;
+      top: 110%;
+      right: 0;
+      background: #1c2436;
+      border: 1px solid #3b435a;
+      border-radius: 0.7rem;
+      padding: 0.3rem;
+      display: none;
+      flex-direction: column;
+      gap: 0.1rem;
+      z-index: 45;
+      min-width: 140px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+    }
+    .explorer-more-dropdown.show {
+      display: flex;
+    }
+    .explorer-more-item {
+      background: transparent;
+      border: none;
+      color: #d3d9e6;
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .explorer-more-item:hover {
+      background: #2e3a50;
       color: white;
     }
     .explorer-tree {
@@ -363,15 +415,13 @@
     }
     .tree-item .three-dot {
       margin-left: auto;
-      opacity: 0;
+      opacity: 1;
       cursor: pointer;
       padding: 0.15rem 0.3rem;
       border-radius: 0.3rem;
       color: #8899cc;
       font-size: 0.7rem;
-    }
-    .tree-item:hover .three-dot {
-      opacity: 1;
+      position: relative;
     }
     .tree-item .three-dot:hover {
       background: #3b435a;
@@ -406,10 +456,22 @@
       gap: 0.4rem;
       font-size: 0.78rem;
       transition: 0.15s;
+      flex-direction: row;
+      text-align: left;
+    }
+    .context-item i {
+      order: -1;
+      width: 1.1rem;
+      text-align: center;
     }
     .context-item:hover {
       background: #2e3a50;
       color: white;
+    }
+    .context-separator {
+      height: 1px;
+      background: #323b51;
+      margin: 0.2rem 0.5rem;
     }
 
     .editor-panel {
@@ -632,11 +694,21 @@
     <div class="explorer-backdrop" id="explorerBackdrop"></div>
     <aside class="explorer-overlay" id="explorerOverlay">
       <div class="explorer-header">
-        <span><i class="fas fa-folder-tree"></i> EXPLORER</span>
-        <div class="actions">
+        <div class="explorer-title">
+          <i class="fas fa-code"></i> F.C.E.T CODE EDITOR
+        </div>
+        <div class="explorer-actions-row">
+          <span class="explorer-label">FILE</span>
           <button class="icon-btn" id="newFileBtn" title="New File"><i class="fas fa-file-plus"></i></button>
           <button class="icon-btn" id="newFolderBtn" title="New Folder"><i class="fas fa-folder-plus"></i></button>
-          <button class="icon-btn" id="deleteItemBtn" title="Delete"><i class="fas fa-trash"></i></button>
+          <div class="icon-btn" id="explorerMoreBtn" style="position:relative;" title="More">
+            <i class="fas fa-ellipsis-v"></i>
+            <div class="explorer-more-dropdown" id="explorerMoreDropdown">
+              <button class="explorer-more-item" data-action="importFile"><i class="fas fa-file-import"></i> Import</button>
+              <button class="explorer-more-item" data-action="undo"><i class="fas fa-undo"></i> Undo</button>
+              <button class="explorer-more-item" data-action="redo"><i class="fas fa-redo"></i> Redo</button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="explorer-tree" id="explorerTree"></div>
@@ -685,14 +757,7 @@
     </div>
   </div>
 
-  <div class="context-menu" id="contextMenu">
-    <button class="context-item" data-action="newFile"><i class="fas fa-file-plus"></i> New File</button>
-    <button class="context-item" data-action="newFolder"><i class="fas fa-folder-plus"></i> New Folder</button>
-    <button class="context-item" data-action="importFile"><i class="fas fa-file-import"></i> Import Files</button>
-    <button class="context-item" data-action="rename"><i class="fas fa-pen"></i> Rename</button>
-    <button class="context-item" data-action="copyPath"><i class="fas fa-copy"></i> Copy Path</button>
-    <button class="context-item" data-action="exportFile"><i class="fas fa-file-export"></i> Export</button>
-  </div>
+  <div class="context-menu" id="contextMenu"></div>
 
   <script>
     (function() {
@@ -711,30 +776,91 @@
       const searchInput = document.getElementById('searchInput');
       const searchDropdownBar = document.getElementById('searchDropdownBar');
       const searchToggleBtn = document.getElementById('searchToggleBtn');
+      const explorerMoreBtn = document.getElementById('explorerMoreBtn');
+      const explorerMoreDropdown = document.getElementById('explorerMoreDropdown');
 
-      const STORAGE_KEY = 'fcet_fs_v3';
+      const STORAGE_KEY = 'fcet_fs_v6';
       let fileSystem = { root: { type: 'folder', children: {} } };
       let currentFilePath = null;
       let selectedTreePath = null;
       let contextTargetPath = null;
+      let contextTargetType = null;
+      let clipboardPath = null;
+      let clipboardAction = null;
       let modalMode = 'file';
       let modalParentPath = 'root';
 
-      function loadFS() {
-        const s = localStorage.getItem(STORAGE_KEY);
-        if (s) { try { fileSystem = JSON.parse(s); } catch(e) { fileSystem = { root: { type: 'folder', children: {} } }; } }
+      function initFS() {
+        fileSystem = { root: { type: 'folder', children: {} } };
       }
-      function saveFS() { localStorage.setItem(STORAGE_KEY, JSON.stringify(fileSystem)); }
+
+      function loadFS() {
+        try {
+          const s = localStorage.getItem(STORAGE_KEY);
+          if (s) { 
+            const parsed = JSON.parse(s);
+            if (parsed && parsed.root && parsed.root.type === 'folder') {
+              fileSystem = parsed;
+              if (!fileSystem.root.children) {
+                fileSystem.root.children = {};
+              }
+            } else {
+              initFS();
+            }
+          } else {
+            initFS();
+          }
+        } catch(e) { 
+          initFS();
+        }
+      }
+
+      function saveFS() { 
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(fileSystem)); 
+        } catch(e) {
+          console.error('Save failed:', e);
+        }
+      }
+
+      function ensureChildren(node) {
+        if (node && node.type === 'folder' && !node.children) {
+          node.children = {};
+        }
+      }
+
       function getNode(path) {
-        if (path === 'root') return fileSystem.root;
-        const parts = path.split('/').filter(Boolean);
+        if (!path || path === 'root') {
+          ensureChildren(fileSystem.root);
+          return fileSystem.root;
+        }
+        const parts = path.split('/').filter(function(p) { return p.length > 0; });
         let node = fileSystem.root;
-        for (const p of parts) { if (!node.children?.[p]) return null; node = node.children[p]; }
+        ensureChildren(node);
+        for (var i = 0; i < parts.length; i++) {
+          var p = parts[i];
+          if (!node.children || !node.children[p]) return null; 
+          node = node.children[p];
+          ensureChildren(node);
+        }
         return node;
       }
-      function getParentPath(path) { const p = path.split('/').filter(Boolean); p.pop(); return p.join('/') || 'root'; }
-      function getFileName(path) { const p = path.split('/').filter(Boolean); return p[p.length-1] || ''; }
+
+      function getParentPath(path) { 
+        if (!path || path === 'root') return 'root';
+        const p = path.split('/').filter(function(p) { return p.length > 0; });
+        p.pop(); 
+        return p.length === 0 ? 'root' : p.join('/');
+      }
+
+      function getFileName(path) { 
+        if (!path || path === 'root') return '';
+        const p = path.split('/').filter(function(p) { return p.length > 0; });
+        return p[p.length-1] || ''; 
+      }
+
       function getFileIconClass(name) {
+        if (!name) return 'default';
         const ext = name.split('.').pop().toLowerCase();
         return { html:'html', css:'css', js:'js', py:'python', md:'markdown', json:'json' }[ext] || 'default';
       }
@@ -749,9 +875,11 @@
         explorerBackdrop.classList.remove('active');
       }
 
-      function renderTree(filter = '') {
+      function renderTree(filter) {
+        filter = filter || '';
         explorerTree.innerHTML = '';
-        const rootChildren = Object.keys(fileSystem.root.children || {});
+        ensureChildren(fileSystem.root);
+        const rootChildren = Object.keys(fileSystem.root.children);
         if (rootChildren.length === 0) {
           explorerTree.innerHTML = '<div class="watermark">📂 Let\'s Get Started<br><small>Create a file or folder</small></div>';
           return;
@@ -760,45 +888,65 @@
       }
 
       function renderNode(node, path, container, level, filter) {
-        const entries = Object.entries(node.children || {}).sort((a,b) => {
-          if (a[1].type==='folder' && b[1].type!=='folder') return -1;
-          if (a[1].type!=='folder' && b[1].type==='folder') return 1;
+        ensureChildren(node);
+        const entries = Object.entries(node.children).sort(function(a,b) {
+          if (a[1].type === 'folder' && b[1].type !== 'folder') return -1;
+          if (a[1].type !== 'folder' && b[1].type === 'folder') return 1;
           return a[0].localeCompare(b[0]);
         });
-        for (const [name, item] of entries) {
+        for (var i = 0; i < entries.length; i++) {
+          var name = entries[i][0];
+          var item = entries[i][1];
           if (filter && !name.toLowerCase().includes(filter)) continue;
-          const itemPath = path + '/' + name;
-          const isFolder = item.type === 'folder';
-          const wrapper = document.createElement('div');
-          const itemDiv = document.createElement('div');
+          var itemPath = path === 'root' ? name : path + '/' + name;
+          var isFolder = item.type === 'folder';
+          var wrapper = document.createElement('div');
+          var itemDiv = document.createElement('div');
           itemDiv.className = 'tree-item' + (currentFilePath === itemPath ? ' active' : '');
-          itemDiv.dataset.path = itemPath;
+          itemDiv.setAttribute('data-path', itemPath);
           itemDiv.style.paddingLeft = (level * 1 + 0.5) + 'rem';
 
           if (isFolder) {
             itemDiv.innerHTML = '<i class="arrow fas fa-chevron-right"></i><i class="folder-icon fas fa-folder"></i> ' + esc(name);
           } else {
-            const ic = getFileIconClass(name);
+            var ic = getFileIconClass(name);
             itemDiv.innerHTML = '<span style="width:1rem;display:inline-block;"></span><i class="file-icon ' + ic + ' fas fa-file-code"></i> ' + esc(name);
           }
-          const td = document.createElement('span');
+          
+          var td = document.createElement('span');
           td.className = 'three-dot';
           td.innerHTML = '<i class="fas fa-ellipsis-v"></i>';
-          td.addEventListener('click', (e) => { e.stopPropagation(); contextTargetPath = itemPath; showContextMenu(e.clientX, e.clientY); });
+          td.onclick = (function(path, type) {
+            return function(e) {
+              e.stopPropagation();
+              contextTargetPath = path;
+              contextTargetType = type;
+              var rect = td.getBoundingClientRect();
+              var menuWidth = 160;
+              showContextMenu(rect.left - menuWidth - 10, rect.top);
+            };
+          })(itemPath, item.type);
+          
           itemDiv.appendChild(td);
-          itemDiv.addEventListener('click', (e) => {
-            if (e.target.closest('.three-dot')) return;
-            if (isFolder) {
-              const arr = itemDiv.querySelector('.arrow');
-              arr.classList.toggle('expanded');
-              const cd = wrapper.querySelector(':scope > .tree-children');
-              if (cd) cd.style.display = cd.style.display === 'none' ? 'block' : 'none';
-            } else { openFile(itemPath); closeExplorer(); }
-            selectedTreePath = itemPath;
-          });
+          itemDiv.onclick = (function(pth, isFolder) {
+            return function(e) {
+              if (e.target.closest('.three-dot')) return;
+              if (isFolder) {
+                var arr = itemDiv.querySelector('.arrow');
+                arr.classList.toggle('expanded');
+                var cd = wrapper.querySelector(':scope > .tree-children');
+                if (cd) cd.style.display = cd.style.display === 'none' ? 'block' : 'none';
+              } else { 
+                openFile(pth); 
+                closeExplorer(); 
+              }
+              selectedTreePath = pth;
+            };
+          })(itemPath, isFolder);
+          
           wrapper.appendChild(itemDiv);
           if (isFolder) {
-            const cd = document.createElement('div');
+            var cd = document.createElement('div');
             cd.className = 'tree-children';
             cd.style.display = 'block';
             wrapper.appendChild(cd);
@@ -808,145 +956,405 @@
         }
       }
 
-      function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+      function esc(s) { 
+        if (!s) return '';
+        return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); 
+      }
 
       function openFile(path) {
-        if (currentFilePath) { const pn = getNode(currentFilePath); if (pn?.type==='file') pn.content = editor.value; }
-        const node = getNode(path);
+        if (currentFilePath) { 
+          var pn = getNode(currentFilePath); 
+          if (pn && pn.type === 'file') {
+            pn.content = editor.value; 
+          }
+        }
+        var node = getNode(path);
         if (!node || node.type !== 'file') return;
         currentFilePath = path;
         editor.value = node.content || '';
-        pathText.textContent = path.replace('root/','');
+        pathText.textContent = path;
         saveFS();
         renderTree(searchInput.value);
         editor.focus();
       }
 
       function showModal(mode, parentPath) {
-        modalMode = mode; modalParentPath = parentPath;
-        modalLabel.textContent = mode === 'file' ? 'New File' : 'New Folder';
-        modalInput.value = mode === 'file' ? 'untitled.txt' : 'new-folder';
-        modalOverlay.classList.add('active');
-        modalInput.focus(); modalInput.select();
+        modalMode = mode; 
+        modalParentPath = parentPath || 'root';
+        
+        var parent = getNode(modalParentPath);
+        if (parent && parent.type === 'folder') {
+          modalLabel.textContent = mode === 'file' ? 'New File' : 'New Folder';
+          modalInput.value = mode === 'file' ? 'untitled.txt' : 'new-folder';
+          modalOverlay.classList.add('active');
+          setTimeout(function() {
+            modalInput.focus(); 
+            modalInput.select();
+          }, 100);
+        } else {
+          alert('Cannot create item here. Select a folder first.');
+        }
       }
-      function hideModal() { modalOverlay.classList.remove('active'); }
+      
+      function hideModal() { 
+        modalOverlay.classList.remove('active'); 
+      }
 
-      document.getElementById('modalConfirm').addEventListener('click', () => {
-        const name = modalInput.value.trim();
-        if (!name) return;
-        const parent = getNode(modalParentPath);
-        if (!parent || parent.type !== 'folder') return;
-        if (modalMode === 'file') { parent.children[name] = { type: 'file', content: '' }; }
-        else { parent.children[name] = { type: 'folder', children: {} }; }
-        saveFS(); renderTree(searchInput.value); hideModal();
-        if (modalMode === 'file') openFile(modalParentPath + '/' + name);
-      });
-      document.getElementById('modalCancel').addEventListener('click', hideModal);
-      modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) hideModal(); });
+      function createItem() {
+        var name = modalInput.value.trim();
+        if (!name) {
+          alert('Please enter a name');
+          return;
+        }
+        
+        var parent = getNode(modalParentPath);
+        if (!parent) {
+          alert('Parent folder not found: ' + modalParentPath);
+          return;
+        }
+        
+        if (parent.type !== 'folder') {
+          alert('Cannot create item in a file');
+          return;
+        }
+        
+        ensureChildren(parent);
+        
+        if (parent.children[name]) {
+          alert('Name already exists');
+          return;
+        }
+        
+        if (modalMode === 'file') { 
+          parent.children[name] = { type: 'file', content: '' }; 
+        } else { 
+          parent.children[name] = { type: 'folder', children: {} }; 
+        }
+        
+        saveFS(); 
+        renderTree(searchInput.value); 
+        hideModal();
+        
+        if (modalMode === 'file') {
+          var newPath = modalParentPath === 'root' ? name : modalParentPath + '/' + name;
+          openFile(newPath);
+        }
+      }
+
+      document.getElementById('modalConfirm').onclick = createItem;
+      document.getElementById('modalCancel').onclick = hideModal;
+      modalOverlay.onclick = function(e) { 
+        if (e.target === modalOverlay) hideModal(); 
+      };
+
+      modalInput.onkeydown = function(e) {
+        if (e.key === 'Enter') {
+          createItem();
+        } else if (e.key === 'Escape') {
+          hideModal();
+        }
+      };
 
       function deleteItem(path) {
         if (!path || path === 'root') return;
-        const name = getFileName(path);
+        var name = getFileName(path);
         if (!confirm('Delete "' + name + '"?')) return;
-        const pp = getParentPath(path);
-        const parent = getNode(pp);
-        delete parent.children[name];
-        if (currentFilePath === path) { currentFilePath = null; editor.value = ''; pathText.textContent = 'No file open'; }
-        saveFS(); renderTree(searchInput.value);
+        var pp = getParentPath(path);
+        var parent = getNode(pp);
+        if (parent && parent.children) {
+          delete parent.children[name];
+        }
+        if (currentFilePath === path) { 
+          currentFilePath = null; 
+          editor.value = ''; 
+          pathText.textContent = 'No file open'; 
+        }
+        saveFS(); 
+        renderTree(searchInput.value);
       }
 
       function renameItem(path) {
-        const node = getNode(path);
+        var node = getNode(path);
         if (!node || path === 'root') return;
-        const old = getFileName(path);
-        const nn = prompt('Rename:', old);
+        var old = getFileName(path);
+        var nn = prompt('Rename:', old);
         if (!nn || nn === old) return;
-        const pp = getParentPath(path);
-        const parent = getNode(pp);
+        var pp = getParentPath(path);
+        var parent = getNode(pp);
+        if (!parent || !parent.children) return;
         if (parent.children[nn]) { alert('Name exists!'); return; }
         parent.children[nn] = node;
         delete parent.children[old];
-        if (currentFilePath === path) { currentFilePath = pp + '/' + nn; pathText.textContent = currentFilePath.replace('root/',''); }
-        saveFS(); renderTree(searchInput.value);
+        if (currentFilePath === path) { 
+          currentFilePath = pp === 'root' ? nn : pp + '/' + nn; 
+          pathText.textContent = currentFilePath; 
+        }
+        saveFS(); 
+        renderTree(searchInput.value);
       }
 
-      function copyPathAction(path) { navigator.clipboard.writeText(path).then(() => alert('Path copied!')); }
-      function exportFile(path) {
-        const node = getNode(path);
+      function copyPathAction(path) { 
+        navigator.clipboard.writeText(path).then(function() {
+          alert('Path copied!');
+        }).catch(function() {
+          alert('Failed to copy path');
+        });
+      }
+
+      function cutItem(path) {
+        clipboardPath = path;
+        clipboardAction = 'cut';
+        alert('Item cut to clipboard');
+      }
+
+      function copyItem(path) {
+        clipboardPath = path;
+        clipboardAction = 'copy';
+        alert('Item copied to clipboard');
+      }
+
+      function pasteItem(targetPath) {
+        if (!clipboardPath || !clipboardAction) {
+          alert('Nothing to paste');
+          return;
+        }
+        var sourceNode = getNode(clipboardPath);
+        if (!sourceNode) {
+          alert('Source item not found');
+          return;
+        }
+        var targetNode = getNode(targetPath);
+        if (!targetNode || targetNode.type !== 'folder') {
+          alert('Cannot paste here');
+          return;
+        }
+        ensureChildren(targetNode);
+        var name = getFileName(clipboardPath);
+        var newName = name;
+        while (targetNode.children[newName]) {
+          var pts = newName.split('.');
+          newName = pts[0] + ' (copy).' + (pts[1] || '');
+        }
+        targetNode.children[newName] = JSON.parse(JSON.stringify(sourceNode));
+        
+        if (clipboardAction === 'cut') {
+          var pp = getParentPath(clipboardPath);
+          var parent = getNode(pp);
+          if (parent && parent.children) {
+            delete parent.children[name];
+          }
+          clipboardPath = null;
+          clipboardAction = null;
+        }
+        saveFS();
+        renderTree(searchInput.value);
+        alert('Pasted successfully');
+      }
+
+      function shareFile(path) {
+        var node = getNode(path);
         if (!node || node.type !== 'file') return;
-        const blob = new Blob([node.content||''], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = getFileName(path); document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        if (navigator.share) {
+          var blob = new Blob([node.content || ''], { type: 'text/plain' });
+          var file = new File([blob], getFileName(path), { type: 'text/plain' });
+          navigator.share({
+            title: getFileName(path),
+            files: [file]
+          }).catch(function() {});
+        } else {
+          alert('Sharing not supported on this browser');
+        }
+      }
+
+      function downloadFileAction(path) {
+        var node = getNode(path);
+        if (!node || node.type !== 'file') return;
+        var blob = new Blob([node.content || ''], { type: 'text/plain' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url; 
+        a.download = getFileName(path); 
+        document.body.appendChild(a); 
+        a.click(); 
+        document.body.removeChild(a);
         URL.revokeObjectURL(url);
       }
 
-      function showContextMenu(x, y) { contextMenu.style.left = x+'px'; contextMenu.style.top = y+'px'; contextMenu.classList.add('show'); }
-      function hideContextMenu() { contextMenu.classList.remove('show'); }
+      function exportFile(path) {
+        downloadFileAction(path);
+      }
 
-      contextMenu.addEventListener('click', (e) => {
-        const action = e.target.closest('.context-item')?.dataset.action;
-        if (!action || !contextTargetPath) return;
+      function buildContextMenu(path, type) {
+        var isRoot = (path === 'root');
+        var html = '';
+        
+        if (type === 'folder') {
+          if (isRoot) {
+            html += '<button class="context-item" data-action="newFile"><i class="fas fa-file-plus"></i> New File</button>';
+            html += '<button class="context-item" data-action="newFolder"><i class="fas fa-folder-plus"></i> New Folder</button>';
+            html += '<button class="context-item" data-action="importFile"><i class="fas fa-file-import"></i> Import Files</button>';
+            html += '<button class="context-item" data-action="rename"><i class="fas fa-pen"></i> Rename</button>';
+            html += '<button class="context-item" data-action="copyPath"><i class="fas fa-copy"></i> Copy Path</button>';
+            html += '<button class="context-item" data-action="exportFile"><i class="fas fa-file-export"></i> Export</button>';
+            html += '<div class="context-separator"></div>';
+            html += '<button class="context-item" data-action="delete"><i class="fas fa-trash"></i> Delete</button>';
+          } else {
+            html += '<button class="context-item" data-action="newFile"><i class="fas fa-file-plus"></i> New File</button>';
+            html += '<button class="context-item" data-action="newFolder"><i class="fas fa-folder-plus"></i> New Folder</button>';
+            html += '<button class="context-item" data-action="importFile"><i class="fas fa-file-import"></i> Import Files</button>';
+            html += '<button class="context-item" data-action="copy"><i class="fas fa-copy"></i> Copy</button>';
+            html += '<button class="context-item" data-action="cut"><i class="fas fa-cut"></i> Cut</button>';
+            if (clipboardPath) {
+              html += '<button class="context-item" data-action="paste"><i class="fas fa-paste"></i> Paste</button>';
+            }
+            html += '<button class="context-item" data-action="rename"><i class="fas fa-pen"></i> Rename</button>';
+            html += '<button class="context-item" data-action="copyPath"><i class="fas fa-copy"></i> Copy Path</button>';
+            html += '<button class="context-item" data-action="exportFile"><i class="fas fa-file-export"></i> Export</button>';
+            html += '<div class="context-separator"></div>';
+            html += '<button class="context-item" data-action="delete"><i class="fas fa-trash"></i> Delete</button>';
+          }
+        } else if (type === 'file') {
+          html += '<button class="context-item" data-action="copy"><i class="fas fa-copy"></i> Copy</button>';
+          html += '<button class="context-item" data-action="cut"><i class="fas fa-cut"></i> Cut</button>';
+          html += '<button class="context-item" data-action="rename"><i class="fas fa-pen"></i> Rename</button>';
+          html += '<button class="context-item" data-action="copyPath"><i class="fas fa-copy"></i> Copy Path</button>';
+          html += '<button class="context-item" data-action="share"><i class="fas fa-share-alt"></i> Share</button>';
+          html += '<button class="context-item" data-action="download"><i class="fas fa-download"></i> Download</button>';
+          html += '<button class="context-item" data-action="editAsCode"><i class="fas fa-code"></i> Edit as Code</button>';
+          html += '<div class="context-separator"></div>';
+          html += '<button class="context-item" data-action="delete"><i class="fas fa-trash"></i> Delete</button>';
+        }
+        
+        return html;
+      }
+
+      function showContextMenu(x, y) {
+        contextMenu.innerHTML = buildContextMenu(contextTargetPath, contextTargetType);
+        contextMenu.style.left = x + 'px';
+        contextMenu.style.top = y + 'px';
+        contextMenu.classList.add('show');
+      }
+      
+      function hideContextMenu() { 
+        contextMenu.classList.remove('show'); 
+      }
+
+      contextMenu.onclick = function(e) {
+        var actionItem = e.target.closest('.context-item');
+        if (!actionItem || !contextTargetPath) return;
+        var action = actionItem.getAttribute('data-action');
+        
+        var node = getNode(contextTargetPath);
+        var targetForCreate = contextTargetPath;
+        
+        if (node && node.type === 'file') {
+          targetForCreate = getParentPath(contextTargetPath);
+        }
+        
         switch(action) {
-          case 'newFile': showModal('file', contextTargetPath); break;
-          case 'newFolder': showModal('folder', contextTargetPath); break;
-          case 'importFile': importFileTo(contextTargetPath); break;
+          case 'newFile': showModal('file', targetForCreate); break;
+          case 'newFolder': showModal('folder', targetForCreate); break;
+          case 'importFile': importFileTo(targetForCreate); break;
           case 'rename': renameItem(contextTargetPath); break;
           case 'copyPath': copyPathAction(contextTargetPath); break;
           case 'exportFile': exportFile(contextTargetPath); break;
+          case 'delete': deleteItem(contextTargetPath); break;
+          case 'copy': copyItem(contextTargetPath); break;
+          case 'cut': cutItem(contextTargetPath); break;
+          case 'paste': pasteItem(contextTargetPath); break;
+          case 'share': shareFile(contextTargetPath); break;
+          case 'download': downloadFileAction(contextTargetPath); break;
+          case 'editAsCode': openFile(contextTargetPath); closeExplorer(); break;
         }
         hideContextMenu();
+      };
+      
+      document.addEventListener('click', function(e) { 
+        if (!contextMenu.contains(e.target)) hideContextMenu(); 
       });
-      document.addEventListener('click', (e) => { if (!contextMenu.contains(e.target)) hideContextMenu(); });
 
       async function importFileTo(parentPath) {
         try {
-          const [h] = await window.showOpenFilePicker({ types: [{ accept: { 'text/*': ['.html','.css','.js','.py','.md','.txt','.json','.xml'] } }] });
-          const file = await h.getFile();
-          const content = await file.text();
-          const parent = getNode(parentPath);
-          if (parent?.type==='folder') {
-            let name = file.name;
-            while (parent.children[name]) { const pts = name.split('.'); name = pts[0]+' (copy).'+(pts[1]||'txt'); }
-            parent.children[name] = { type: 'file', content };
-            saveFS(); renderTree(searchInput.value); openFile(parentPath+'/'+name);
+          var [h] = await window.showOpenFilePicker({ 
+            types: [{ 
+              accept: { 'text/*': ['.html','.css','.js','.py','.md','.txt','.json','.xml'] } 
+            }] 
+          });
+          var file = await h.getFile();
+          var content = await file.text();
+          var parent = getNode(parentPath);
+          if (parent && parent.type === 'folder') {
+            ensureChildren(parent);
+            var name = file.name;
+            while (parent.children[name]) { 
+              var pts = name.split('.'); 
+              name = pts[0] + ' (copy).' + (pts[1] || 'txt'); 
+            }
+            parent.children[name] = { type: 'file', content: content };
+            saveFS(); 
+            renderTree(searchInput.value); 
+            var newPath = parentPath === 'root' ? name : parentPath + '/' + name;
+            openFile(newPath);
           }
-        } catch(e) { if (e.name !== 'AbortError') alert('Import failed'); }
+        } catch(e) { 
+          if (e.name !== 'AbortError') alert('Import failed: ' + e.message); 
+        }
       }
 
       function saveCurrent() {
-        if (currentFilePath) { const n = getNode(currentFilePath); if (n?.type==='file') { n.content = editor.value; saveFS(); } }
+        if (currentFilePath) { 
+          var n = getNode(currentFilePath); 
+          if (n && n.type === 'file') { 
+            n.content = editor.value; 
+            saveFS(); 
+          } 
+        }
       }
+      
       function downloadFile(name, content) {
-        const b = new Blob([content], { type: 'text/plain' });
-        const u = URL.createObjectURL(b);
-        const a = document.createElement('a');
-        a.href = u; a.download = name; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        var b = new Blob([content], { type: 'text/plain' });
+        var u = URL.createObjectURL(b);
+        var a = document.createElement('a');
+        a.href = u; 
+        a.download = name; 
+        document.body.appendChild(a); 
+        a.click(); 
+        document.body.removeChild(a);
         URL.revokeObjectURL(u);
       }
+      
       function downloadAll() {
         saveCurrent();
         function collect(node) {
-          let files = [];
-          for (const [n, item] of Object.entries(node.children||{})) {
-            if (item.type==='file') files.push({ name: n, content: item.content||'' });
-            else files = files.concat(collect(item));
+          var files = [];
+          for (var n in node.children || {}) {
+            var item = node.children[n];
+            if (item.type === 'file') {
+              files.push({ name: n, content: item.content || '' });
+            } else {
+              files = files.concat(collect(item));
+            }
           }
           return files;
         }
-        collect(fileSystem.root).forEach(f => downloadFile(f.name, f.content));
+        var allFiles = collect(fileSystem.root);
+        allFiles.forEach(function(f) { 
+          downloadFile(f.name, f.content); 
+        });
       }
 
       function getLang(path) {
         if (!path) return 'text';
-        const ext = path.split('.').pop().toLowerCase();
-        return { html:'html', css:'css', js:'js', py:'python', md:'markdown' }[ext] || 'text';
+        var ext = path.split('.').pop().toLowerCase();
+        var langs = { html:'html', css:'css', js:'js', py:'python', md:'markdown' };
+        return langs[ext] || 'text';
       }
+      
       function genPreview(code, lang) {
-        if (lang==='html'||lang==='css'||lang==='js') {
-          return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' + (lang==='css'?code:'') + '</style></head><body>' + (lang==='html'?code:'') + '<script>' + (lang==='js'?code:'') + '<\/script></body></html>';
-        } else if (lang==='markdown') {
-          let h = code.replace(/```(\w*)\n([\s\S]*?)```/g,'<pre><code>$2</code></pre>');
+        if (lang === 'html' || lang === 'css' || lang === 'js') {
+          return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' + (lang === 'css' ? code : '') + '</style></head><body>' + (lang === 'html' ? code : '') + '<script>' + (lang === 'js' ? code : '') + '<\/script></body></html>';
+        } else if (lang === 'markdown') {
+          var h = code.replace(/```(\w*)\n([\s\S]*?)```/g,'<pre><code>$2</code></pre>');
           h = h.replace(/`([^`]+)`/g,'<code>$1</code>');
           h = h.replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^# (.+)$/gm,'<h1>$1</h1>');
           h = h.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>');
@@ -954,112 +1362,236 @@
         }
         return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{white-space:pre-wrap;font-family:monospace;padding:2rem;background:#fff}</style></head><body>' + esc(code) + '</body></html>';
       }
+      
       function writeFrame(html) {
-        const d = outputFrame.contentDocument || outputFrame.contentWindow?.document;
-        if (d) { d.open(); d.write(html); d.close(); }
-        else { outputFrame.src='about:blank'; outputFrame.onload=()=>{ const dc=outputFrame.contentDocument||outputFrame.contentWindow?.document; if(dc){ dc.open(); dc.write(html); dc.close(); } }; }
+        var d = outputFrame.contentDocument || outputFrame.contentWindow.document;
+        if (d) { 
+          d.open(); 
+          d.write(html); 
+          d.close(); 
+        } else { 
+          outputFrame.src = 'about:blank'; 
+          outputFrame.onload = function() { 
+            var dc = outputFrame.contentDocument || outputFrame.contentWindow.document; 
+            if (dc) { 
+              dc.open(); 
+              dc.write(html); 
+              dc.close(); 
+            } 
+          }; 
+        }
       }
+      
       async function runPython(code) {
         try {
           if (!window.pyodide) {
-            const s = document.createElement('script');
-            s.src='https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js';
+            var s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js';
             document.head.appendChild(s);
-            await new Promise((res,rej)=>{ s.onload=res; s.onerror=rej; });
+            await new Promise(function(res, rej) { 
+              s.onload = res; 
+              s.onerror = rej; 
+            });
             window.pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.25.0/full/' });
           }
           await window.pyodide.runPythonAsync('import sys\nfrom io import StringIO\nsys.stdout = StringIO()');
           await window.pyodide.runPythonAsync(code);
-          const out = await window.pyodide.runPythonAsync('sys.stdout.getvalue()');
-          writeFrame('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:monospace;padding:2rem;background:#f8f9ff}</style></head><body>' + esc(out||'✅ Done.') + '</body></html>');
+          var out = await window.pyodide.runPythonAsync('sys.stdout.getvalue()');
+          writeFrame('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:monospace;padding:2rem;background:#f8f9ff}</style></head><body>' + esc(out || '✅ Done.') + '</body></html>');
         } catch(e) {
-          writeFrame('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:monospace;padding:2rem;color:red}</style></head><body>❌ ' + esc(e.message||e) + '</body></html>');
+          writeFrame('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:monospace;padding:2rem;color:red}</style></head><body>❌ ' + esc(e.message || e) + '</body></html>');
         }
       }
+      
       function executeRun() {
         saveCurrent();
-        const lang = getLang(currentFilePath);
+        var lang = getLang(currentFilePath);
         outputOverlay.classList.add('active');
-        if (lang==='python') runPython(editor.value);
-        else writeFrame(genPreview(editor.value, lang));
+        if (lang === 'python') {
+          runPython(editor.value);
+        } else {
+          writeFrame(genPreview(editor.value, lang));
+        }
       }
 
-      document.getElementById('explorerToggleBtn').addEventListener('click', () => {
+      document.getElementById('explorerToggleBtn').onclick = function() {
         if (explorerOverlay.classList.contains('open')) {
           closeExplorer();
         } else {
           openExplorer();
         }
-      });
+      };
 
-      explorerBackdrop.addEventListener('click', closeExplorer);
+      explorerBackdrop.onclick = closeExplorer;
 
-      searchToggleBtn.addEventListener('click', () => {
+      searchToggleBtn.onclick = function() {
         searchDropdownBar.classList.toggle('show');
         searchToggleBtn.classList.toggle('active');
         if (searchDropdownBar.classList.contains('show')) {
           searchInput.focus();
         }
-      });
+      };
 
-      document.addEventListener('click', (e) => {
+      document.addEventListener('click', function(e) {
         if (!searchDropdownBar.contains(e.target) && e.target !== searchToggleBtn && !searchToggleBtn.contains(e.target)) {
           searchDropdownBar.classList.remove('show');
           searchToggleBtn.classList.remove('active');
         }
       });
 
-      searchInput.addEventListener('input', () => { renderTree(searchInput.value); });
+      searchInput.oninput = function() { 
+        renderTree(searchInput.value); 
+      };
 
-      document.getElementById('newFileBtn').addEventListener('click', () => showModal('file', 'root'));
-      document.getElementById('newFolderBtn').addEventListener('click', () => showModal('folder', 'root'));
-      document.getElementById('deleteItemBtn').addEventListener('click', () => { if (selectedTreePath) deleteItem(selectedTreePath); });
+      document.getElementById('newFileBtn').onclick = function() { showModal('file', 'root'); };
+      document.getElementById('newFolderBtn').onclick = function() { showModal('folder', 'root'); };
 
-      editor.addEventListener('input', () => { if (currentFilePath) { const n = getNode(currentFilePath); if (n?.type==='file') n.content = editor.value; } });
+      explorerMoreBtn.onclick = function(e) {
+        e.stopPropagation();
+        explorerMoreDropdown.classList.toggle('show');
+      };
 
-      document.getElementById('runIconBtn').addEventListener('click', executeRun);
-      document.getElementById('closeOutputBtn').addEventListener('click', () => { outputOverlay.classList.remove('active'); editor.focus(); });
-      document.addEventListener('keydown', (e) => { if (e.key==='Escape' && outputOverlay.classList.contains('active')) { outputOverlay.classList.remove('active'); editor.focus(); } });
-      editor.addEventListener('keydown', (e) => { if ((e.ctrlKey||e.metaKey) && e.key==='Enter') { e.preventDefault(); executeRun(); } });
+      document.addEventListener('click', function(e) {
+        if (!explorerMoreBtn.contains(e.target)) {
+          explorerMoreDropdown.classList.remove('show');
+        }
+      });
 
-      document.getElementById('moreOptionsBtn').addEventListener('click', (e) => { e.stopPropagation(); miniDropdown.classList.toggle('show'); });
-      document.addEventListener('click', () => miniDropdown.classList.remove('show'));
-      miniDropdown.addEventListener('click', (e) => {
-        const action = e.target.closest('.mini-item')?.dataset.action;
+      explorerMoreDropdown.onclick = function(e) {
+        var actionItem = e.target.closest('.explorer-more-item');
+        if (!actionItem) return;
+        var action = actionItem.getAttribute('data-action');
+        if (action === 'importFile') {
+          importFileTo('root');
+        } else if (action === 'undo') {
+          document.execCommand('undo');
+          editor.focus();
+        } else if (action === 'redo') {
+          document.execCommand('redo');
+          editor.focus();
+        }
+        explorerMoreDropdown.classList.remove('show');
+      };
+
+      editor.oninput = function() { 
+        if (currentFilePath) { 
+          var n = getNode(currentFilePath); 
+          if (n && n.type === 'file') {
+            n.content = editor.value; 
+          }
+        } 
+      };
+
+      document.getElementById('runIconBtn').onclick = executeRun;
+      document.getElementById('closeOutputBtn').onclick = function() { 
+        outputOverlay.classList.remove('active'); 
+        editor.focus(); 
+      };
+      
+      document.addEventListener('keydown', function(e) { 
+        if (e.key === 'Escape' && outputOverlay.classList.contains('active')) { 
+          outputOverlay.classList.remove('active'); 
+          editor.focus(); 
+        } 
+      });
+      
+      editor.addEventListener('keydown', function(e) { 
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { 
+          e.preventDefault(); 
+          executeRun(); 
+        } 
+      });
+
+      document.getElementById('moreOptionsBtn').onclick = function(e) { 
+        e.stopPropagation(); 
+        miniDropdown.classList.toggle('show'); 
+      };
+      
+      document.addEventListener('click', function() { 
+        miniDropdown.classList.remove('show'); 
+      });
+      
+      miniDropdown.onclick = function(e) {
+        var actionItem = e.target.closest('.mini-item');
+        if (!actionItem) return;
+        var action = actionItem.getAttribute('data-action');
         if (action === 'save') {
           saveCurrent();
           if (currentFilePath) downloadFile(getFileName(currentFilePath), editor.value);
         } else if (action === 'saveAs') { 
           saveCurrent(); 
-          const n = currentFilePath ? getFileName(currentFilePath) : 'file.txt'; 
-          const nn = prompt('Save as:', n); 
+          var n = currentFilePath ? getFileName(currentFilePath) : 'file.txt'; 
+          var nn = prompt('Save as:', n); 
           if (nn) downloadFile(nn, editor.value); 
         } else if (action === 'delete') {
           if (selectedTreePath || currentFilePath) {
             deleteItem(selectedTreePath || currentFilePath);
           }
-        } else if (action === 'downloadAll') downloadAll();
-        else if (action === 'clearEditor') { editor.value = ''; if (currentFilePath) { const n = getNode(currentFilePath); if (n?.type==='file') n.content = ''; saveFS(); } }
+        } else if (action === 'downloadAll') {
+          downloadAll();
+        } else if (action === 'clearEditor') { 
+          editor.value = ''; 
+          if (currentFilePath) { 
+            var node = getNode(currentFilePath); 
+            if (node && node.type === 'file') {
+              node.content = ''; 
+              saveFS(); 
+            }
+          } 
+        }
         miniDropdown.classList.remove('show');
-      });
+      };
 
-      function moveCursor(dx,dy){
-        const t=editor, p=t.selectionStart, txt=t.value, lines=txt.split('\n');
-        let cc=0, cl=0, col=0;
-        for(let i=0;i<lines.length;i++){ if(cc+lines[i].length>=p){ cl=i; col=p-cc; break; } cc+=lines[i].length+1; }
-        if(dy){ const nl=Math.max(0,Math.min(lines.length-1,cl+dy)), nc=Math.min(col,lines[nl].length); let np=0; for(let i=0;i<nl;i++) np+=lines[i].length+1; np+=nc; t.setSelectionRange(np,np); }
-        if(dx){ const np=Math.max(0,Math.min(txt.length,p+dx)); t.setSelectionRange(np,np); }
+      function moveCursor(dx, dy) {
+        var t = editor, p = t.selectionStart, txt = t.value, lines = txt.split('\n');
+        var cc = 0, cl = 0, col = 0;
+        for (var i = 0; i < lines.length; i++) { 
+          if (cc + lines[i].length >= p) { 
+            cl = i; 
+            col = p - cc; 
+            break; 
+          } 
+          cc += lines[i].length + 1; 
+        }
+        if (dy) { 
+          var nl = Math.max(0, Math.min(lines.length - 1, cl + dy));
+          var nc = Math.min(col, lines[nl].length); 
+          var np = 0; 
+          for (var j = 0; j < nl; j++) np += lines[j].length + 1; 
+          np += nc; 
+          t.setSelectionRange(np, np); 
+        }
+        if (dx) { 
+          var newPos = Math.max(0, Math.min(txt.length, p + dx)); 
+          t.setSelectionRange(newPos, newPos); 
+        }
         t.focus();
       }
-      document.getElementById('arrowUpBtn').addEventListener('click', ()=>moveCursor(0,-1));
-      document.getElementById('arrowDownBtn').addEventListener('click', ()=>moveCursor(0,1));
-      document.getElementById('arrowLeftBtn').addEventListener('click', ()=>moveCursor(-1,0));
-      document.getElementById('arrowRightBtn').addEventListener('click', ()=>moveCursor(1,0));
-      document.getElementById('undoBtn').addEventListener('click', ()=>{ document.execCommand('undo'); editor.focus(); });
-      document.getElementById('redoBtn').addEventListener('click', ()=>{ document.execCommand('redo'); editor.focus(); });
-      document.getElementById('copySelectionBtn').addEventListener('click', ()=>{ if(editor.selectionStart!==editor.selectionEnd) document.execCommand('copy'); else navigator.clipboard.writeText(editor.value); editor.focus(); });
-      document.getElementById('cutBtn').addEventListener('click', ()=>{ document.execCommand('cut'); editor.focus(); });
-      document.getElementById('pasteBtn').addEventListener('click', async ()=>{ try{ const t=await navigator.clipboard.readText(); editor.setRangeText(t,editor.selectionStart,editor.selectionEnd,'end'); }catch{ document.execCommand('paste'); } editor.focus(); });
+      
+      document.getElementById('arrowUpBtn').onclick = function() { moveCursor(0, -1); };
+      document.getElementById('arrowDownBtn').onclick = function() { moveCursor(0, 1); };
+      document.getElementById('arrowLeftBtn').onclick = function() { moveCursor(-1, 0); };
+      document.getElementById('arrowRightBtn').onclick = function() { moveCursor(1, 0); };
+      document.getElementById('undoBtn').onclick = function() { document.execCommand('undo'); editor.focus(); };
+      document.getElementById('redoBtn').onclick = function() { document.execCommand('redo'); editor.focus(); };
+      document.getElementById('copySelectionBtn').onclick = function() { 
+        if (editor.selectionStart !== editor.selectionEnd) {
+          document.execCommand('copy'); 
+        } else {
+          navigator.clipboard.writeText(editor.value); 
+        }
+        editor.focus(); 
+      };
+      document.getElementById('cutBtn').onclick = function() { document.execCommand('cut'); editor.focus(); };
+      document.getElementById('pasteBtn').onclick = async function() { 
+        try { 
+          var t = await navigator.clipboard.readText(); 
+          editor.setRangeText(t, editor.selectionStart, editor.selectionEnd, 'end'); 
+        } catch(e) { 
+          document.execCommand('paste'); 
+        } 
+        editor.focus(); 
+      };
 
       loadFS();
       renderTree();
