@@ -102,7 +102,7 @@ Open **index.html** in your browser or run a local web server.
 # 🌐 Live Demo
 ## WEBSITE 
 
-[https://fect-code-editor.vercel.app](https://eliteprotech.my.id/fcet-codeditor)
+https://eliteprotech.my.id/fcet-codeditor
 
 ---
 
