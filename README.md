@@ -50,9 +50,9 @@ A modern browser-based code editor built for complex coding tasks with a profess
 ├── public/
 │   ├── 404.html
 │   ├── live.html
-│   ├── index.html
-│   └── index.js
+│   └── index.html
 │
+├── index.js
 ├── package.json
 └── README.md
 ```
